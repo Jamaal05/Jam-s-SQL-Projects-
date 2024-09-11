@@ -1,0 +1,49 @@
+////// SQL Schema Code //////
+
+CREATE TABLE marathon (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+   participant_name TEXT,
+   previous_experience TEXT,
+   completion_fraction REAL);
+
+INSERT INTO marathon (participant_name, previous_experience,  completion_fraction)
+    VALUES ("Sadie Hawkins", "yes", 1);
+INSERT INTO marathon (participant_name, previous_experience,  completion_fraction)
+    VALUES ("Brandon Flowers", "no", 0.241);
+INSERT INTO marathon (participant_name, previous_experience,  completion_fraction)
+    VALUES ("Michael Scott", "no", 0.804);
+INSERT INTO marathon (participant_name, previous_experience,  completion_fraction)
+    VALUES ("Karamo Brown", "yes", 0.9512);
+INSERT INTO marathon (participant_name, previous_experience,  completion_fraction)
+    VALUES ("Antoni Porowski", "yes", 0.640);
+INSERT INTO marathon (participant_name, previous_experience,  completion_fraction)
+    VALUES ("Rajnighanda Kapoor", "no", 1);
+
+
+////// SQL Query Code //////
+
+-- Query #1 Selects participant and completion percent
+
+Select participant_name
+,completion_fraction * 100 As completion_percent
+From marathon;
+
+
+-- Query #2 Using Round
+
+Select participant_name
+,Round (completion_fraction * 100, 1) As completion_percent
+From marathon;
+
+
+-- Query #3 Shows completed quarters instead of percents
+
+Select Count (*)
+,Case When completion_fraction = .100 Then "100"
+When completion_fraction >= .75 Then "75%+"
+When completion_fraction >= .50 Then "50%+"
+When completion_fraction >= .25 Then "25%+"
+Else "under 25%" End As quarter_completed
+From marathon
+Group By quarter_completed 
+;
