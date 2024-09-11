@@ -53,4 +53,3 @@ Where product_type = "Savings"
 And interest_rate >= .75
 And monthly_fee = 0
 Order By product_name Asc;
-
