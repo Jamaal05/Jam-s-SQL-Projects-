@@ -47,3 +47,4 @@ Else "under 25%" End As quarter_completed
 From marathon
 Group By quarter_completed 
 ;
+
