@@ -32,24 +32,24 @@ VALUES
 
 -- query #1 (shows all options on the table)
 
-Select product_name
-From product_type;
+SELECT product_name
+FROM product_type;
 
 
 -- query #2 (Shows products with checking and savings)
 
-Select product_name, product_type 
-From bank_products
-Where product_type = "Checking"
-Or product_type = "savings"
-Order By product_name Asc;
+SELECT product_name, product_type 
+FROM bank_products
+WHERE product_type = "Checking"
+OR product_type = "savings"
+ORDER BY product_name ASC;
 
 
 -- query #3 (Shows products and interest rate with the interst rate being atleast 0.75 and having no monthly fee)
 
-Select product_name, interest_rate
-From bank_products
-Where product_type = "Savings"
-And interest_rate >= .75
-And monthly_fee = 0
-Order By product_name Asc;
+SELECT product_name, interest_rate
+FROM bank_products
+WHERE product_type = "Savings"
+AND interest_rate >= .75
+AND monthly_fee = 0
+ORDER BY product_name ASC;
