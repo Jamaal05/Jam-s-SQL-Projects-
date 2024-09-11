@@ -24,27 +24,27 @@ INSERT INTO marathon (participant_name, previous_experience,  completion_fractio
 
 -- Query #1 Selects participant and completion percent
 
-Select participant_name
-,completion_fraction * 100 As completion_percent
-From marathon;
+SELECT participant_name
+,completion_fraction * 100 AS completion_percent
+FROM marathon;
 
 
 -- Query #2 Using Round
 
-Select participant_name
-,Round (completion_fraction * 100, 1) As completion_percent
-From marathon;
+SELECT participant_name
+,ROUND (completion_fraction * 100, 1) AS completion_percent
+FROM marathon;
 
 
 -- Query #3 Shows completed quarters instead of percents
 
-Select Count (*)
-,Case When completion_fraction = .100 Then "100"
-When completion_fraction >= .75 Then "75%+"
-When completion_fraction >= .50 Then "50%+"
-When completion_fraction >= .25 Then "25%+"
-Else "under 25%" End As quarter_completed
-From marathon
-Group By quarter_completed 
+SELECT COUNT (*)
+,CASE WHEN completion_fraction = .100 THEN "100"
+WHEN completion_fraction >= .75 THEN "75%+"
+WHEN completion_fraction >= .50 THEN "50%+"
+WHEN completion_fraction >= .25 THEN "25%+"
+ELSE "under 25%" End As quarter_completed
+FROM marathon
+GROUP BY quarter_completed 
 ;
 
