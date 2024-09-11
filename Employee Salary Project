@@ -29,24 +29,24 @@ VALUES
 
 -- Query #1 (Select the departments which the sum of it's salaries are atleast 300k)
 
-Select department, SUM (salary) As salary
-From employees
-Group By department
-Having SUM (salary) >= 300000;
+SELECT department, SUM (salary) AS salary
+FROM employees
+GROUP BY department
+HAVING SUM (salary) >= 300000;
 
 
 
 -- Query #2 (Select the departments that have an average pay of atleast 70k)
 
-Select department, Avg (salary) As avg_salary 
-From employees
-Group By department
-Having avg_salary >= 70000;
+SELECT department, AVG (salary) AS avg_salary 
+FROM employees
+GROUP BY department
+HAVING avg_salary >= 70000;
 
 
 -- Query #3 (Select the departments that have an average pay of atleast 50k)
 
-Select department, Avg (salary) As avg_salary 
-From employees
-Group By department
-Having avg_salary >= 50000;
+SELECT department, AVG (salary) AS avg_salary 
+FROM employees
+GROUP BY department
+HAVING avg_salary >= 50000;
