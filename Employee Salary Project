@@ -35,6 +35,7 @@ Group By department
 Having SUM (salary) >= 300000;
 
 
+
 -- Query #2 (Select the departments that have an average pay of atleast 70k)
 
 Select department, Avg (salary) As avg_salary 
