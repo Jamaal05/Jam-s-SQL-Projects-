@@ -56,4 +56,4 @@ WHERE product_id = 1;
 
 SELECT email
 FROM customer_subscriptions
-WHERE product_id In (SELECT product_id FROM products WHERE product_type = "Internet");
+WHERE product_id IN (SELECT product_id FROM products WHERE product_type = "Internet");
