@@ -152,5 +152,5 @@ ROUND(AVG(healthcare_benefits), 2) AS average_healthcare_benefits
 FROM fortune_companies
 WHERE industry IN ('Manufacturing', 'Energy', 'Healthcare', 'Technology', 'Retail', 'Financials', 'Telecommunications', 'Finance')
 GROUP BY industry
-ORDER BY employees DESC;
+ORDER BY amount_of_employees DESC;
 
