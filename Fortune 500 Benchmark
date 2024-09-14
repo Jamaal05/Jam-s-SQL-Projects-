@@ -61,7 +61,13 @@ VALUES
 
 ////// SQL Query Code //////
 
--- Query #1 (Selects the companies that have less than 5000 employees) 
+-- Query #1 (What company has the most employees compared to others) 
+
+SELECT company_name, MAX(employees) AS employees
+FROM fortune_companies;
+
+
+-- Query #2 (Selects the companies that have less than 5000 employees) 
 
 SELECT company_name AS smaller_companies, employees
 FROM fortune_companies
@@ -69,7 +75,7 @@ WHERE employees <= 5000
 ORDER BY employees DESC; 
 
 
--- Query #2 (Selects all heathcare and manufacturing companies) 
+-- Query #3 (Selects all heathcare and manufacturing companies) 
 
 SELECT company_name, industry AS industry_type
 FROM fortune_companies
@@ -77,7 +83,7 @@ WHERE industry IN ("Manufacturing" , "Healthcare")
 ORDER BY industry ASC;
 
 
--- Query #3 (Selects all companies with a max of 100k employees)
+-- Query #4 (Selects all companies with a max of 100k employees)
 
 SELECT company_name, MIN(employees) AS employees 
 FROM fortune_companies
@@ -86,7 +92,7 @@ HAVING MIN(employees) < 100000
 ORDER BY employees DESC;
 
 
--- Query #4 (Select the average revenue of every manufacturing, healthcare, & energy company)
+-- Query #5 (Select the average revenue of every manufacturing, healthcare, & energy company)
 
 SELECT industry, 
 ROUND(AVG(revenue), 1) AS avg_revenue
@@ -95,7 +101,7 @@ WHERE industry IN ("Manufacturing", "Energy", "Healthcare")
 GROUP BY industry;
 
 
--- Query #5 (Sums the reveneue for every individual industry)
+-- Query #6 (Sums the reveneue for every individual industry)
 
 SELECT industry,
 ROUND(SUM(revenue), 1) AS summed_revenue
@@ -104,5 +110,47 @@ WHERE industry IN ('Manufacturing', 'Energy', 'Healthcare', 'Technology', 'Retai
 GROUP BY industry;
 
 
--- Query #6 (Determines the size of a company by employee count)
+-- Query #7 (Determines the size of a company by employee count)
+
+SELECT company_name, employees,
+CASE WHEN employees >= 50000 THEN "Large Company"
+WHEN employees >= 10000 THEN "Meduim Company"
+WHEN employees >= 0 THEN "Small Company"
+END AS company_size
+FROM fortune_companies 
+ORDER BY employees DESC;
+
+
+-- Query #8 (Determines the amount of large, samll, and medium companies) 
+
+SELECT COUNT(employees) AS amount_of_companies,
+CASE WHEN employees >= 50000 THEN "Large Company"
+WHEN employees >= 10000 THEN "Meduim Company"
+WHEN employees >= 0 THEN "Small Company"
+END AS company_size
+FROM fortune_companies
+GROUP BY company_size;
+
+
+-- Query #9 (Determines the sum of all employees by large, small, and medium companies) 
+
+SELECT sum(employees) AS amount_of_employees,
+CASE WHEN employees >= 50000 THEN "Large Company"
+WHEN employees >= 10000 THEN "Meduim Company"
+WHEN employees >= 0 THEN "Small Company"
+END AS company_size
+FROM fortune_companies
+GROUP BY company_size;
+
+
+-- Query #10 (Determines the count, sum, and avg healthcare benefits for all industries)
+
+SELECT industry,
+COUNT(industry) AS amount_of_industries,
+SUM(employees) AS amount_of_employees,
+ROUND(AVG(healthcare_benefits), 2) AS average_healthcare_benefits
+FROM fortune_companies
+WHERE industry IN ('Manufacturing', 'Energy', 'Healthcare', 'Technology', 'Retail', 'Financials', 'Telecommunications', 'Finance')
+GROUP BY industry
+ORDER BY employees DESC;
 
