@@ -61,7 +61,7 @@ VALUES
 
 ////// SQL Query Code //////
 
--- Query #1 (What company has the most employees compared to others) 
+-- Query #1 (Selects the company that has the most employees compared to others) 
 
 SELECT company_name, MAX(employees) AS employees
 FROM fortune_companies;
@@ -121,7 +121,7 @@ FROM fortune_companies
 ORDER BY employees DESC;
 
 
--- Query #8 (Determines the amount of large, samll, and medium companies) 
+-- Query #8 (Determines the amount of large, medium, and small companies) 
 
 SELECT COUNT(employees) AS amount_of_companies,
 CASE WHEN employees >= 50000 THEN "Large Company"
@@ -132,7 +132,7 @@ FROM fortune_companies
 GROUP BY company_size;
 
 
--- Query #9 (Determines the sum of all employees by large, small, and medium companies) 
+-- Query #9 (Determines the sum of all employees by large, medium, and small companies) 
 
 SELECT sum(employees) AS amount_of_employees,
 CASE WHEN employees >= 50000 THEN "Large Company"
