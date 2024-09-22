@@ -1,0 +1,51 @@
+-- https://www.dropbox.com/scl/fi/vd10nx4bo5soq7xg78sdg/BIT_DB?rlkey=0yh592o2nl1766n8l6hod5uc9&e=3&dl=0
+-- table to be opened and read by SQL Lite 
+
+SELECT * FROM JanSales
+
+-- Question 1 (Shows the amount of all orders from JanSales)
+
+SELECT Count(orderID) Total_Of_All_Orders
+FROM JanSales
+WHERE LENGTH(orderID) = 6
+AND orderID <> 'Order ID';
+
+-- Question 2 (Shows the amount of aLl orders made for iPhones from JanSales)
+
+SELECT COUNT(Product) Orders_For_iPhone
+FROM JanSales
+WHERE Product = 'iPhone';
+
+-- Question 3 (Shows the account numbers from February)
+
+SELECT DISTINCT(Cus.acctnum) AS Feb_Acctnums
+FROM customers Cus
+INNER JOIN FebSales Feb ON Cus.order_ID = Feb.orderID
+WHERE LENGTH(orderID) = 6 AND orderID <> 'Order ID';
+
+-- Question 4 (Determines the cheapest product ordered in January)
+
+SELECT Product AS Cheapest_Product, MIN(price) AS price
+FROM JanSales;
+
+-- Question 5 (Determines the total revenue for each product from January)
+
+SELECT ROUND(SUM(quantity)*price, 2) 
+AS Total_Revenue, Product  
+FROM JanSales
+GROUP BY Product; 
+
+-- Question 6 (Selects all products sold in February at 548 Lincoln St, Seattle, WA 98101)
+
+SELECT Product, SUM(Quantity) AS Quantity,
+ROUND(SUM(quantity)*price, 2) AS Revenue
+FROM FebSales
+WHERE Location = '548 Lincoln St, Seattle, WA 98101'
+ORDER BY Product;
+
+-- Question 7 (Determines the amount of customers that paid for more than 2 product and averages the amount spent February)
+
+SELECT COUNT(DISTINCT Cus.acctnum) AS Amount_Of_Customers, ROUND(AVG(price), 2) AS Avg_Amount_Spent
+FROM customers Cus
+LEFT JOIN FebSales Feb ON Cus.order_id = Feb.orderID 
+HAVING SUM(Quantity) >= 2 AND LENGTH(orderID) = 6 AND orderID <> 'Order ID';
