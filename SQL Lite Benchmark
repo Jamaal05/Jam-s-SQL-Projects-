@@ -43,9 +43,16 @@ FROM FebSales
 WHERE Location = '548 Lincoln St, Seattle, WA 98101'
 ORDER BY Product;
 
--- Question 7 (Determines the amount of customers that paid for more than 2 product and averages the amount spent February)
+-- Question 7 (Determines the amount of customers that paid for more than 2 product and averages the amount spent for February)
 
 SELECT COUNT(DISTINCT Cus.acctnum) AS Amount_Of_Customers, ROUND(AVG(price), 2) AS Avg_Amount_Spent
 FROM customers Cus
 LEFT JOIN FebSales Feb ON Cus.order_id = Feb.orderID 
 HAVING SUM(Quantity) >= 2 AND LENGTH(orderID) = 6 AND orderID <> 'Order ID';
+
+-- Question 8 (Shows all products sold in Los Angeles for February)
+
+SELECT Product, SUM(Quantity), orderdate
+FROM Febsales
+WHERE location LIKE '%Los Angeles%'
+GROUP BY product;
