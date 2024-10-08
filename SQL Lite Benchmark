@@ -1,7 +1,4 @@
--- https://www.dropbox.com/scl/fi/vd10nx4bo5soq7xg78sdg/BIT_DB?rlkey=0yh592o2nl1766n8l6hod5uc9&e=3&dl=0
--- table to be opened and read by SQL Lite 
-
-SELECT * FROM JanSales
+-- SELECT * FROM JanSales
 
 -- Question 1 (Shows the amount of all orders from JanSales)
 
@@ -48,7 +45,8 @@ ORDER BY Product;
 SELECT COUNT(DISTINCT Cus.acctnum) AS Amount_Of_Customers, ROUND(AVG(price), 2) AS Avg_Amount_Spent
 FROM customers Cus
 LEFT JOIN FebSales Feb ON Cus.order_id = Feb.orderID 
-HAVING SUM(Quantity) >= 2 AND LENGTH(orderID) = 6 AND orderID <> 'Order ID';
+HAVING SUM(Quantity) >= 2 
+AND LENGTH(orderID) = 6 AND orderID <> 'Order ID';
 
 -- Question 8 (Shows all products sold in Los Angeles for February)
 
@@ -56,3 +54,42 @@ SELECT Product, SUM(Quantity), orderdate
 FROM Febsales
 WHERE location LIKE '%Los Angeles%'
 GROUP BY product;
+
+-- Question 9 (Selects the locations in New York that recieved atleast 3 orders in January, and shows that amount of orders recieved)
+
+SELECT DISTINCT location, COUNT(orderID) AS Total_Orders
+FROM JanSales
+WHERE location LIKE '%NY%' 
+GROUP BY location
+HAVING COUNT(orderID) >= 3;
+
+-- Question 10 (Shows the amounts of each headphones sold in February)
+
+SELECT Product, SUM(Quantity) AS Total_Sold
+FROM FebSales
+WHERE Product LIKE '%Headphone%'
+AND LENGTH(orderID) = 6 AND orderID <> 'Order ID'
+GROUP BY Product;
+
+-- Question 11 (Shows the average amount spent per account for February) 
+
+SELECT  SUM(Feb.price*Feb.Quantity)/COUNT(Cus.acctnum) AS Avg_Spent_per_Acct 
+FROM customers Cus
+LEFT JOIN FebSales Feb ON Feb.orderID = Cus.order_id
+WHERE LENGTH(orderID) = 6 AND orderID <> 'Order ID';
+
+-- Question 12 (Shows the average quantity of products purchased per account for February) 
+
+SELECT  SUM(Feb.Quantity)/COUNT(Cus.acctnum) AS Avg_Quantity_per_Acct 
+FROM customers Cus
+LEFT JOIN FebSales Feb ON Feb.orderID = Cus.order_id
+WHERE LENGTH(orderID) = 6 AND orderID <> 'Order ID';
+
+-- Question 13 (Selects the products that brought in the most revenue in January)
+
+Select Product, ROUND(Sum(price * quantity), 2) As Revenue
+FROM JanSales
+WHERE LENGTH(orderID) = 6 AND orderID <> 'Order ID'
+GROUP BY Product
+ORDER BY (price * quantity) DESC
+LIMIT 1;
