@@ -1,4 +1,4 @@
--- (creating the tables in SQLite)
+-- (creating the tables in SQLite Studio)
 
 CREATE TABLE BIT_DB.CityBikeLanes (
 id integer primary key,
