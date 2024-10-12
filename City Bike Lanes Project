@@ -1,4 +1,4 @@
--- (creating the tables in postgresql)
+-- (creating the tables in SQLite)
 
 CREATE TABLE BIT_DB.CityBikeLanes (
 id integer primary key,
