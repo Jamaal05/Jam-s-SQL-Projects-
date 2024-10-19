@@ -1,0 +1,179 @@
+(Done on SQLite)
+
+SELECT * FROM chinook.invoice_items LIMIT 100;
+
+-- Query #1 (Selects customer's full names, customer ID, and country but not from th USA)
+
+SELECT CustomerID, FirstName,
+    LastName, Country
+FROM chinook.customers
+WHERE country != 'USA';
+
+
+-- Query #2 (Selects customers only from Brazil)
+
+SELECT Cus.CustomerID, Cus.FirstName,
+    Cus.LastName, Cus.Country
+FROM chinook.customers Cus
+WHERE Cus.Country = 'Brazil';
+
+
+-- Query #3 (Selects the invoices and invoice dates of customers only from Brazil)
+
+SELECT Voice.InvoiceId, Cus.FirstName, Cus.LastName, 
+    Voice.InvoiceDate, Voice.BillingCountry
+FROM chinook.customers Cus
+LEFT JOIN chinook.invoices Voice 
+    ON Cus.customerId = Voice.customerId
+WHERE country = 'Brazil'
+ORDER BY Voice.invoiceId ASC
+;
+
+
+-- Query #4 (Selects the employees that are sales agents)
+
+SELECT Ploy.FirstName, Ploy.LastName, 
+    Ploy.Title, Ploy.email
+FROM chinook.employees Ploy
+WHERE Title = 'Sales Agent';
+
+
+-- Query #5 (Selects the distinct billing countries in invoice)
+
+SELECT DISTINCT BillingCountry 
+FROM chinook.invoices;
+
+
+-- Query #6 (Shows the invoices associated for each sales agent)
+
+WITH AgentTable AS (
+    SELECT Ploy.employeeId, Ploy.FirstName, Ploy.LastName, Voice.InvoiceDate,
+        Cus.SupportRepId, Voice.InvoiceId, Voice.BillingAddress,
+        Voice.BillingState, Voice.BillingCountry, Voice.BillingPostalCode
+    FROM customers Cus
+    INNER JOIN employees Ploy 
+        ON Ploy.employeeId = Cus.SupportRepId
+    LEFT JOIN invoices Voice
+        ON Voice.customerId = Cus.CustomerId
+        )
+SELECT AgentTable.FirstName || ' ' || AgentTable.LastName 
+    AS 'Sales Agent Name', 
+    AgentTable.invoiceId AS 'Invoice ID',
+    AgentTable.BillingAddress AS 'Invoice Billing Addresss',
+    AgentTable.BillingState AS 'Billing State',
+    AgentTable.BillingCountry AS 'Billing Country', 
+    AgentTable.BillingPostalCode AS 'Postal Code',
+    AgentTable.InvoiceDate AS 'Invoice Date'
+FROM AgentTable
+ORDER BY AgentTable.FirstName || ' ' || AgentTable.LastName ASC,
+    AgentTable.InvoiceDate DESC;
+    
+
+-- Query #7 (Shows the total of invoices, with the costumer name, sales, and agent name for all Invoices & Customers)
+
+WITH AgentTable AS (
+    SELECT Ploy.employeeId, Ploy.FirstName, Ploy.LastName,
+        Cus.FirstName AS CusFirstname, Cus.CustomerId, 
+        Cus.Lastname AS CusLastName, Cus.SupportRepId, 
+        Cus.State, Cus.Country, Voice.InvoiceId, Voice.Total
+    FROM customers Cus
+    INNER JOIN employees Ploy 
+        ON Ploy.employeeId = Cus.SupportRepId
+    INNER JOIN invoices Voice
+        ON Voice.customerId = Cus.CustomerId
+        )
+SELECT AgentTable.FirstName || ' ' || AgentTable.LastName AS 'Sales Agent Name', 
+    AgentTable.CustomerId AS 'Customer ID',
+    AgentTable.CusFirstName || ' ' || AgentTable.CusLastName AS 'Customer Name', 
+    AgentTable.State AS 'Customer State',
+    AgentTable.Country AS 'Customer Country',
+    SUM(AgentTable.Total) AS 'Invoice Total'
+FROM AgentTable
+GROUP BY AgentTable.CusFirstName || ' ' || AgentTable.CusLastName
+ORDER BY CustomerId ASC;
+    
+
+-- Query #8 (Shows the total invoices for 2009)
+
+SELECT COUNT(Voice.InvoiceId) AS 'Total Invoices For 2009'
+FROM Chinook.Invoices Voice
+WHERE strftime('%Y', Voice.InvoiceDate) = '2009';
+
+
+-- Query #9 (Shows the total sales for 2009) 
+
+SELECT SUM(Items.Quantity) AS 'Total Sales In 2009'
+FROM chinook.Invoice_items Items
+INNER JOIN chinook.Invoices Voice 
+    ON Voice.InvoiceId = Items.InvoiceId
+WHERE strftime('%Y', Voice.InvoiceDate) = '2009';
+
+
+-- Query #10 (Selects query that has purchased track name and each invoice line ID)
+
+SELECT Item.InvoiceLineId, Track.TrackId, 
+    Track.Name, Track.UnitPrice
+FROM chinook.tracks Track
+INNER JOIN chinook.invoice_items Item
+    ON Item.TrackId = Track.TrackId
+ORDER BY Item.InvoiceLineId ASC;
+
+
+-- Query #11 (Query 10 but with the artist name)
+
+SELECT Item.InvoiceLineId, Track.TrackId, 
+    Track.Name, Track.Composer AS 'Artist(s)',
+    Track.UnitPrice
+FROM chinook.tracks Track
+INNER JOIN chinook.invoice_items Item
+    ON Item.TrackId = Track.TrackId
+ORDER BY Item.InvoiceLineId ASC;
+
+
+-- Query #12 (Shows all tracks, and includes album name, media type, genre)
+
+SELECT Genre.Name AS 'Genre',
+    Track.Name AS 'Track Name', 
+    Album.Title AS 'Album',
+    Media.Name AS 'Media Type'
+FROM chinook.tracks Track
+INNER JOIN chinook.albums Album
+    ON Track.AlbumId = Album.AlbumId  
+INNER JOIN chinook.genres Genre
+    ON Track.GenreId = Genre.GenreId 
+INNER JOIN chinook.media_types Media
+    ON Track.MediaTypeId = Media.MediaTypeId 
+ORDER BY Genre.name ASC;
+
+
+-- Query #13 (Shows the amount of sales made by each agent)
+
+SELECT Ploy.FirstName || ' ' || Ploy.LastName AS 'Sales Agent',
+    COUNT(Item.InvoiceLineId) AS 'Amount of Sales'
+FROM chinook.employees Ploy
+INNER JOIN chinook.customers cus
+    ON Cus.SupportRepId = Ploy.EmployeeId
+INNER JOIN chinook.invoices Voice
+    ON Cus.customerId = Voice.CustomerId
+INNER JOIN chinook.invoice_items Item
+    ON Voice.InvoiceId = Item.InvoiceId
+GROUP BY Ploy.FirstName || ' ' || Ploy.LastName;
+
+
+-- Query #14 (Selects the sales agent with the most money made)
+
+SELECT UP_Table.FullName AS 'Agent Name',
+    MAX(U_P) AS 'Amount of Cash in Sales'
+FROM
+(
+SELECT ROUND(SUM(Item.UnitPrice), 2) AS U_P,
+    Ploy.FirstName || ' ' || Ploy.LastName AS FullName
+FROM chinook.employees Ploy
+INNER JOIN chinook.customers cus
+    ON Cus.SupportRepId = Ploy.EmployeeId
+INNER JOIN chinook.invoices Voice
+    ON Cus.customerId = Voice.CustomerId
+INNER JOIN chinook.invoice_items Item
+    ON Voice.InvoiceId = Item.InvoiceId
+    ) UP_Table
+GROUP BY UP_Table.FullName
